@@ -60,6 +60,30 @@ The high level layout of flow...
 
 ```
 
+Consider all usecases initial access cases, CBRA and CFRA, PDCCH Ordered RA, handover cases (LTM, conditional/unconditional)
+
+__Phase 1__: Offline Co-Design & Training
+
+* The gNB runs simulated environments modeling high Doppler (e.g., high-speed train scenarios) or dense IoT deployments.
+* The encoder-decoder neural network pairs are trained until the sequence sets reach a zero-correlation zone (ZCZ) equivalent or better than 3GPP standards.
+
+__Phase 2__: Parameter and Weight Distribution
+
+* The gNB broadcasts the trained model weights or specific quantized codebook mappings down to the UEs via System Information Blocks (SIB) or dedicated RRC Configuration messages.
+* Instead of reading static indexes, the UE loads the tensor configurations into its baseband AI accelerator hardware.
+
+__Phase 3__: UE-Specific On-The-Fly Generation
+
+* When a random access trigger occurs (e.g., initial access, handover, or beam failure), the UE samples its local channel state information (CSI).
+* The embedded AI model executes a forward pass to compile the unique, optimized root sequence.
+* The UE modulates the sequence onto the assigned subcarrier spacing (SCS) time/frequency grid and transmits it as Msg 1.
+
+__Phase 4__: Intelligent gNB Detection & Synchronization
+
+* The gNB feeds the received PRACH time-frequency slot into its AI-based receiver.
+* Rather than utilizing computationally taxing, multi-stage matched filter banks, parallel neural networks calculate the user identity (RAPID) and the timing advance (TA) in a single step.
+* The gNB completes the handshake by dispatching the Random Access Response (Msg 2)
+
 ## Machine Learning Architecture Implementation (Pseudocode)
 
 The following complete, execution-ready PyTorch module defines both the **UE-Side Encoder** (which outputs the non-analytical root sequences) and 
