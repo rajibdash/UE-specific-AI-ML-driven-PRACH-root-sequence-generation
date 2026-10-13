@@ -1,11 +1,23 @@
-### UE Specific AI/ML driven Ops for Automatic PRACH root sequence generation
+## UE Specific AI/ML driven Ops for Automatic PRACH root sequence generation
 Propose to use diffusion and transformers model to generate new root sequences for PRACH other than classical Zadoff-Chu (ZC) sequences. 
+
+## Bakground
 As I understand while today's ZC sequences feature ideal Constant Amplitude Zero Autocorrelation (CAZAC) properties, they suffer from high 
 mutual interference in **ultra dense networks**, strict limitations on the number of root sequences (\(N_{ZC}\) lengths like __839 or 139__), 
 and sensitivity to massive Doppler shifts. 
 
+In short, NR PRACH preambles are cyclic shifts of Zadoff-Chu sequences (not m-sequences). The long formats use length 839, which gives 838 root sequences.
+64 preambles are collected by taking as many shifts as one root allows and continuing with the next logical root. The shift size N_CS must cover the round-trip 
+delay plus delay spread: one sample of the long format is 0.954 µs, worth 143 m. A bigger cell means a bigger N_CS, fewer preambles per root, more roots per 
+cell and fewer cells that can reuse the same set. For fast UEs the Doppler shift creates ghost peaks at a fixed distance du from the true one, 
+so high speed cells use a restricted set, which rules some roots out.
+
+Specifications used: TS 38.211 V19.4.0 Sec 6.3.3.1; TS 36.211 V19.3.0 Sec 5.7.2; TS 38.331 V19.3.0 (RACH-ConfigCommon)
+
 So, the transition to **UE-specific AI/ML-driven PRACH root sequence generation** slated as a candidate framework for 6G and advanced 5G-NR evolutions 
 moves away from **fixed mathematical equations to learned, non-analytical sequences optimized directly by Deep Neural Networks (DNNs)**.
+
+## Layout or outline architecture
 
 The high level layout of flow...
 
@@ -217,3 +229,6 @@ these below key performance indicators to trigger rollbacks to classical Zadoff-
 ---
 
 ## Refernces
+
+1. https://ieeexplore.ieee.org/document/10536687
+   
