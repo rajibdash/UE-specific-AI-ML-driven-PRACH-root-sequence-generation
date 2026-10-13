@@ -43,6 +43,23 @@ The high level layout of flow...
 
 ```
 
+## Draft understanding for generating AI Preamble at UE
+
+
+```
+[Phase 1: Offline Training] -> Learn optimal sequence configurations over varying channel states/conditions.
+                                        |
+                                        v
+[Phase 2: gNB/Network Broadcast] -> gNB distributes Model Weights/Codebooks via SIB/RRC.
+                                        |
+                                        v
+[Phase 3: UE Generation]     -> UE evaluates local environment -> Generates AI Preamble -> Transmits Msg 1. (How we will differentiate legacy preamble Vs AI Generated preamble?)
+                                        |
+                                        v
+[Phase 4: gNB Detection]     -> Parallel Neural Networks compute Preamble ID + Timing Advance.
+
+```
+
 ## Machine Learning Architecture Implementation (Pseudocode)
 
 The following complete, execution-ready PyTorch module defines both the **UE-Side Encoder** (which outputs the non-analytical root sequences) and 
