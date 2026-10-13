@@ -1,7 +1,17 @@
-## UE Specific AI/ML driven Ops for Automatic PRACH root sequence generation
-Propose to use diffusion and transformers model to generate new root sequences for PRACH other than classical Zadoff-Chu (ZC) sequences. 
+## UE Specific AI/ML driven Ops for Automatic PRACH root sequence generation/allocation
+
+## Proposal
+Propose to use a diffusion and transformers model to generate new root sequences for PRACH other than classical Zadoff-Chu (ZC) sequences irrespective of macro- and small cells. 
 
 ## Bakground
+Most networks auto-assign this via PCI-based formulas, but in dense clusters engineers often manually re-plan since PCI-based auto-assignment can still cause overlaps between very close neighbours. Today, the supported Automated RACH Root Sequence Allocation feature in 5G RAN removes the need for manually allocating a spread of rachRootSequence. This reduces the overlap of root sequences. Depending on the quality of the manual RACH root sequence allocation, the automated allocation can help reduce false preamble detection, which in turn improves UE accessibility in network. Some dependencies also with PCI Conflict reporting and HSU (High Speed UE) features as well. 
+
+## Achievements?
+But what benefits will be achieved by supporting AI/ML Ops-driven RACH root sequence allocation in 6G Architecture? 
+would that be more faster than today's Automated RACH Root Sequence Allocation feature.?
+No PRACH occasions overlap? any gain?
+
+## Details
 As I understand while today's ZC sequences feature ideal Constant Amplitude Zero Autocorrelation (CAZAC) properties, they suffer from high 
 mutual interference in **ultra dense networks**, strict limitations on the number of root sequences (\(N_{ZC}\) lengths like __839 or 139__), 
 and sensitivity to massive Doppler shifts. 
