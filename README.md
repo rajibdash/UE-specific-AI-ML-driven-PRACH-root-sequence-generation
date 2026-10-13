@@ -7,6 +7,30 @@ and sensitivity to massive Doppler shifts.
 So, the transition to **UE-specific AI/ML-driven PRACH root sequence generation** slated as a candidate framework for 6G and advanced 5G-NR evolutions 
 moves away from **fixed mathematical equations to learned, non-analytical sequences optimized directly by Deep Neural Networks (DNNs)**.
 
+The high level layout of flow...
+
+```layout
+
++--------------------------------------------------------------------------+
+| gNB (Base Station)                                                       |
++--------------------------------------------------------------------------+
+ | (Monitors channel profile, multi-user interference, and collision rate)
+ v
+[AI Engine: Sequence Generator Network] -> Generates Optimal Root Sequence (S_root)
+ |
+ |-- Broadcasts weights/codebook via SIB / RRC Signaling
+ v
++--------------------------------------------------------------------------+
+| UE (User Equipment)                                                      |
++--------------------------------------------------------------------------+
+[AI Engine: Local Autoencoder / Decoder] -> Receives SIB weights
+ |
+ +--> 1. Evaluates UE-specific KPIs (Doppler shift, Timing Sync)
+ +--> 2. Generates dynamic, AI-optimized PRACH Root Sequence
+ +--> 3. Applies learned or classical shift (v) to output Preamble (Msg 1)
+
+```
+
 ## Machine Learning Architecture Implementation (Pseudocode)
 
 The following complete, execution-ready PyTorch module defines both the **UE-Side Encoder** (which outputs the non-analytical root sequences) and 
