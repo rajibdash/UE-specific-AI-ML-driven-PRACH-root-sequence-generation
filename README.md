@@ -212,6 +212,58 @@ if __name__ == "__main__":
 ```
 ---
 
+## Automated Planning Script Engine (Pseducode)
+The code framework below represents an automated core engine implemented to calculate the
+required sequence blocks for a target 6G gNB deployment scenario. It calculates the preamble
+capacity per root sequence and yields the exact boundary metrics needed for configuration
+automation.
+
+```python
+
+import math
+
+def calculate_6g_prach_allocation(cell_radius_km, logical_start_index,
+N_ZC=839):
+ # Phase velocity of light in km/s
+ C = 300000.0
+ # Calculate approximate round trip delay time
+ rt_delay = (2.0 * cell_radius_km) / C
+ # Safety factor and sample time adjustments mapping to N_CS step width
+ # Synthesized mapping for 6G subcarrier spacing thresholds
+ N_CS = max(13, int(math.ceil(rt_delay * 1.5e6)))
+ # Calculate maximum preambles generated from a single ZC root
+ preambles_per_root = N_ZC // N_CS
+ if preambles_per_root == 0:
+ preambles_per_root = 1
+ # Calculate total consecutive logical roots required to fill the 64 preamble target
+ roots_needed = int(math.ceil(64.0 / preambles_per_root))
+ logical_end_index = logical_start_index + roots_needed - 1
+ return {
+ "calculated_n_cs": N_CS,
+ "preambles_per_root": preambles_per_root,
+ "total_roots_required": roots_needed,
+ "allocated_logical_range": (logical_start_index, logical_end_index)
+ }
+
+# Example execution layout for automated site controller planning
+site_plan = calculate_6g_prach_allocation(cell_radius_km=12.5,
+logical_start_index=140)
+print(f"--- Automated Allocation Execution Output ---")
+print(f"Calculated optimal N_CS: {site_plan['calculated_n_cs']}")
+print(f"Preambles supported per single ZC root:
+{site_plan['preambles_per_root']}")
+print(f"Total logical root sequences allocated:
+{site_plan['total_roots_required']}")
+print(f"Configured Allocated Range: Logical Index
+{site_plan['allocated_logical_range'][0]} to
+{site_plan['allocated_logical_range'][1]}")
+
+
+```
+
+
+
+
 ## Automation & Closed-Loop Network KPIs (Draft -- will be constantly updated on understanding maturity)
 
 To deploy a AI/ML sequence generation into operational RAN networks safely, the RAN must continuously track performance automatedly. 
