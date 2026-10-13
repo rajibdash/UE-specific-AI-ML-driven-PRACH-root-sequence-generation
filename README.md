@@ -9,7 +9,7 @@ Most networks auto-assign this via PCI-based formulas, but in dense clusters eng
 ## Achievements?
 But what benefits will be achieved by supporting AI/ML Ops-driven RACH root sequence allocation in 6G Architecture? 
 would that be more faster than today's Automated RACH Root Sequence Allocation feature.?
-No PRACH occasions overlap? any gain?
+No PRACH occasions overlap? any gain? Can we overcome PRACH limitation capcity?
 
 ## Details
 As I understand while today's ZC sequences feature ideal Constant Amplitude Zero Autocorrelation (CAZAC) properties, they suffer from high 
