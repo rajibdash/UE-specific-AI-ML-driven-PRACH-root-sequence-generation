@@ -231,4 +231,9 @@ these below key performance indicators to trigger rollbacks to classical Zadoff-
 ## Refernces
 
 1. https://ieeexplore.ieee.org/document/10536687
+2. https://www.sharetechnote.com/html/6G/6G_TDoc_Details_RACH.html
+   
+---
+
+## Disclaimer
    
