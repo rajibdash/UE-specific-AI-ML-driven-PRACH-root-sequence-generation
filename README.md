@@ -1,5 +1,41 @@
 ## UE Specific AI/ML driven Ops for Automatic PRACH root sequence generation/allocation
 
+## Reference implementation
+
+This repository's first executable baseline is an educational Zadoff-Chu (ZC)
+root-sequence and cyclic-shift preamble generator. It is a deterministic
+reference point for the proposed UE-specific AI/ML direction, not a complete
+3GPP PRACH implementation. See [DESIGN.md](DESIGN.md) for the workflow,
+assumptions, and extension boundaries.
+
+### Run the Python example and tests
+
+From the repository root:
+
+```sh
+python3 python/prach_reference.py
+python3 -m unittest discover -s tests
+```
+
+### Build and run the C++ example
+
+With a C++17 compiler:
+
+```sh
+g++ -std=c++17 -Wall -Wextra -pedantic cpp/prach_reference.cpp cpp/main.cpp -o /tmp/prach_reference
+/tmp/prach_reference
+```
+
+Both examples default to a length-839 root, `N_CS = 13`, and 64 preambles.
+Call `generate_preambles` with different parameters from Python or C++ code to
+explore other odd lengths and cyclic-shift spacings. The C++ implementation is
+available through `cpp/prach_reference.hpp`. The code uses no external
+dependencies.
+
+The project overview below describes the motivation and proposed AI/ML
+architecture; the baseline implementation does not implement the proposed
+neural encoder or detector.
+
 ## Proposal
 Propose to use a diffusion and transformers model to generate new root sequences for PRACH other than classical Zadoff-Chu (ZC) sequences irrespective of macro- and small cells. 
 
