@@ -1,7 +1,8 @@
 # Reproducible validation
 
 Run commands from the repository root. Runtime code and tests need only Python
-3 and a C++17 compiler; PDF extraction additionally uses Poppler.
+3 (3.8+ for the receiver) and a C++17 compiler; PDF extraction additionally
+uses Poppler.
 
 ## Baseline tests and examples
 
@@ -26,7 +27,40 @@ The unit suite checks the small ZC root's constant amplitude and periodic
 autocorrelation, shift direction, ID/root/shift order, defaults, rejected
 inputs, the Python example, and local Markdown link paths. The C++ example is
 compiled and run explicitly because the repository has no C++ build/test
-framework. It is not a gNB simulation or a test of the paper's receiver.
+framework. These generator checks are not a gNB simulation or a test of the
+paper's receiver.
+
+## Receiver research validation
+
+```sh
+python3 -m unittest discover -s tests -p 'test_receiver.py' -v
+python3 -m examples.python.receiver_demo --seed 7 --count 20 --snr-db 20
+python3 -m examples.python.receiver_demo --seed 7 --count 20 --snr-db 5 \
+  --max-delay 3 --max-doppler 0.01 --collision-probability 0.5
+```
+
+`tests/test_receiver.py` checks exact noiseless delayed samples and metadata,
+phase/Doppler/amplitude, collision superposition (including identical users),
+local-RNG reproducibility, empirical AWGN power, invalid inputs, all six toy
+IDs across bounded delays, seeded high-SNR recovery, silence/threshold rejection,
+a distinguishable two-user collision, the identical-collision limitation,
+hand-computed metrics, I/Q features, and the runnable example.
+
+The default demo should recover all primary IDs with zero sample-delay error
+for its seeded, high-SNR single-user case. Repeating parameters and seed repeats
+data and deterministic metrics; runtime varies. In impaired/collision cases,
+errors are expected. The JSON includes parameters, the preamble bank and receiver
+thresholds, primary-ID/top-k accuracy,
+conditional timing count/MAE/RMSE, collision precision/recall, and seconds per
+sample. `null` means a metric's denominator is zero, not a score of zero.
+No learned receiver runs, and these checks do not validate standards compliance,
+false-alarm calibration, OTA generalization, or either paper's gains.
+
+For future ML comparisons, use independently seeded training/validation/test
+sets and identical held-out observations for both receivers. Report SNR,
+Doppler, delay bounds, bank configuration, collision rate, thresholds, and
+sample counts; keep primary-ID tie rules and conditional timing denominators
+visible. Do not fit preprocessing on held-out data or infer labels at runtime.
 
 ## Python and C++ equivalence
 

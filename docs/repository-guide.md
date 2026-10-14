@@ -22,9 +22,16 @@
 │   ├── cpp/
 │   │   └── main.cpp
 │   └── python/
+│       ├── receiver_demo.py
 │       └── reference_demo.py
 ├── python/
-│   └── prach_reference.py
+│   ├── prach_reference.py
+│   └── receiver/
+│       ├── __init__.py
+│       ├── baseline.py
+│       ├── dataset.py
+│       ├── evaluate.py
+│       └── model.py
 ├── references/
 │   ├── primary/
 │   │   └── PRACHPreambleDesignfor6GWirelessSystems_final.pdf
@@ -34,7 +41,8 @@
 └── tests/
     ├── test_examples.py
     ├── test_markdown_links.py
-    └── test_prach_reference.py
+    ├── test_prach_reference.py
+    └── test_receiver.py
 ```
 
 This lists tracked project files, not generated executables, Python bytecode,
@@ -57,11 +65,18 @@ or build/cache output. No package/build configuration is needed.
 | `references/supporting/2401.12803v1.pdf` | Supporting research source | 5G NR receiver AI/ML study on parallel RAPID and timing-advance estimation. It does not describe the implemented generator or the primary KPS proposal. |
 | `references/supporting/6G AI-Driven Air Interface.pdf` | Supporting research source | Broad Hexa-X-II AI-driven 6G air-interface overview. Background only; not evidence for the project's specific PRACH sequence or signaling design. |
 | `python/prach_reference.py` | Implemented Python baseline | `Preamble`, ZC root generation, cyclic shifting, and root/shift ID allocation. Edit this for Python behavior; keep tests and C++ semantics aligned. The module remains directly runnable. |
+| `python/receiver/__init__.py` | Research package boundary | Marks the independent receiver prototype, not a standards-compliant PHY. |
+| `python/receiver/dataset.py` | Synthetic research data | Seeded AWGN, bounded sample delays, normalized Doppler, user superposition, and per-user/collision labels. |
+| `python/receiver/baseline.py` | Deterministic research receiver | Template correlation, sample-delay estimation, and residual collision heuristic; does not change sequence generation. |
+| `python/receiver/evaluate.py` | Research metrics | Primary/top-k ID accuracy, conditional sample-delay MAE/RMSE, and collision precision/recall. |
+| `python/receiver/model.py` | ML scaffolding only | Raw I/Q features and a prediction protocol; no trained model or inference implementation. |
 | `cpp/prach_reference.hpp` | Implemented C++ interface | Public `prach::Preamble` structure and function declarations. Change with the `.cpp` implementation and example. |
 | `cpp/prach_reference.cpp` | Implemented C++ baseline | C++ equivalent of Python input checks, ZC root generation, cyclic shifts, and allocation. Edit alongside Python when changing shared behavior. |
 | `examples/python/reference_demo.py` | Runnable Python example | Calls the Python baseline with defaults and prints its count and first/last root-shift metadata. |
+| `examples/python/receiver_demo.py` | Research example | Generates a small seeded dataset, runs the correlator, and prints parameters, metrics, and runtime. |
 | `examples/cpp/main.cpp` | Runnable C++ example | Calls the C++ baseline with defaults and prints the same metadata. |
 | `tests/test_prach_reference.py` | Baseline tests | Tests root amplitude/autocorrelation, shift direction, allocation ordering/default, and invalid inputs. Extend when baseline behavior changes. |
+| `tests/test_receiver.py` | Receiver research tests | Checks synthetic signals/labels, reproducibility, correlation/delay/collision behavior, metric arithmetic, features, and the new example. |
 | `tests/test_examples.py` | Example smoke test | Runs the Python module example from the repository root and checks its output. |
 | `tests/test_markdown_links.py` | Documentation layout test | Checks local Markdown link targets so file moves do not leave broken paths. |
 
@@ -73,6 +88,8 @@ or build/cache output. No package/build configuration is needed.
   [architecture](architecture.md) and [validation](validation.md) docs.
 - **Change runnable output or commands:** update the example(s), root README,
   validation commands, and `tests/test_examples.py`.
+- **Change receiver research:** edit `python/receiver/`, its demo, and
+  `tests/test_receiver.py`; keep generator behavior and existing examples intact.
 - **Add a paper-grounded method:** retain the PDF and page references, add a
   distinct implementation rather than silently changing the baseline, then
   update the traceability table, architecture, and file guide. Do not describe

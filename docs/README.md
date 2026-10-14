@@ -26,7 +26,9 @@ current detailed design.
   Its six pages were extracted and reviewed with Poppler's `pdftotext -layout`.
 - **Supporting source:** Rohit Singh et al., “Enhancements for 5G NR PRACH
   Reception: An AI/ML Approach” (arXiv:2401.12803v1), a receiver-focused
-  study—not the primary waveform-design paper.
+  study—not the primary waveform-design paper. It motivates the separate
+  [receiver research prototype](architecture.md#receiver-research-prototype),
+  which adds synthetic data and a correlator, not the paper's neural networks.
 - **Supporting source:** Hamed Farhadi et al., “6G AI-Driven Air Interface —
   Hexa-X-II View,” a broad 6G PHY overview—not a PRACH sequence design.
 
