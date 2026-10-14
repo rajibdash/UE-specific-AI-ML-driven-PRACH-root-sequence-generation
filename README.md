@@ -326,7 +326,7 @@ these below key performance indicators to trigger rollbacks to classical Zadoff-
 | **Timing Advance Mismatch Variance** | gNB CU-CP / DU | Evaluates variations between the model-predicted TA step and the actual convergence delay measured during the Msg3/Msg4 transmission window. | $< \pm 0.5 \mu s$ variance | Indicates synchronization model drift; forces immediate model calibration or rollback to Zadoff-Chu metrics. |
 | **PAPR Distortion Exceedance Factor** | UE L1 Engine | Tracks how often the output power vectors from the AI encoder push the UE power amplifier into its non-linear distortion zone. | $0\%$ tolerance violation | The UE disables on-the-fly execution and shifts back to fixed mathematical ZC generation to protect power amplifier health. |
 
-__NOTE__: also thinking of another KPIs of impact like "Initial Bearer Establishment Success Rate" as bearer establisgment process starts with CBRA process and "HO Proceduer Success Rate" as indicates the performance of inter-cell handover. 
+__NOTE__: also thinking of another KPIs of impact like "Initial Bearer Establishment Success Rate" as Radio bearer establishment process starts with CBRA process and "HO Proceduer Success Rate" as indicates the performance of inter-cell handover. 
 
 ---
 
