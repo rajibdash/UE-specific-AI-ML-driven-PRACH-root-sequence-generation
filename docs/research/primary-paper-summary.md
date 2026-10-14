@@ -85,8 +85,9 @@ repository does not reproduce its experiments.
   (arXiv:2401.12803v1, 12 January 2024; six pages). It studies parallel
   neural-network RAPID detection and timing-advance estimation for a
   single-base-sequence receiver using simulated and over-the-air captures.
-  It is receiver research, not the KPS sequence-design source and not code
-  implemented here. Its conclusion identifies more base sequences, scenarios,
+  It is receiver research, not the KPS sequence-design source. Its neural
+  networks are not implemented here; the separate `python/receiver/` prototype
+  uses its receiver tasks as motivation only. Its conclusion identifies more base sequences, scenarios,
   and multi-user collision detection as future work.
 - [`6G AI-Driven Air Interface.pdf`](../../references/supporting/6G%20AI-Driven%20Air%20Interface.pdf)
   is Hamed Farhadi et al., “6G AI-Driven Air Interface — Hexa-X-II View”
@@ -99,15 +100,36 @@ repository does not reproduce its experiments.
 
 | PDF page / section | Paper concept | Python / C++ relationship | Relevant tests | Project status |
 | --- | --- | --- | --- | --- |
-| p. 1, Abstract and Section I | Massive-access motivation; KPS family and two-stage detector are the paper's contributions | No corresponding KPS or detector implementation; see [architecture scope](../architecture.md#scope-and-implemented-flow) | None; current tests cover only baseline behavior | Research context; not implemented |
-| pp. 2–3, Section II, Figs. 1–2, Eqs. 1–9 | DFT-s-OFDM transmitter, channel, and conventional receiver model | The ZC sample generator is at `python/prach_reference.py::zadoff_chu_root_sequence` and `cpp/prach_reference.cpp::zadoff_chu_root_sequence`; no waveform, channel, or receiver | `test_root_sequence_has_constant_amplitude_and_zero_cyclic_autocorrelation` | ZC root math is implemented; PRACH physical-layer chain is out of scope |
+| p. 1, Abstract and Section I | Massive-access motivation; KPS family and two-stage detector are the paper's contributions | No corresponding KPS or KPS detector implementation; see [architecture scope](../architecture.md#scope-and-implemented-flow) | None for KPS | Research context; not implemented |
+| pp. 2–3, Section II, Figs. 1–2, Eqs. 1–9 | DFT-s-OFDM transmitter, channel, and conventional receiver model | The ZC sample generator is at `python/prach_reference.py::zadoff_chu_root_sequence` and `cpp/prach_reference.cpp::zadoff_chu_root_sequence`; the separate toy receiver has no DFT-s-OFDM chain or paper channel model | `test_root_sequence_has_constant_amplitude_and_zero_cyclic_autocorrelation` | ZC root math is implemented; paper PRACH physical-layer chain is out of scope |
 | pp. 3–4, Section III, Fig. 3, Eqs. 10–18 | KPS outer/inner construction; M-sequence × ZC/Alltop examples and capacity | No KPS, M-sequence, Alltop, or capacity code in either language | None | Proposed research method; not implemented |
 | p. 3, Section III, Eq. 13 | Cyclically shifted KPS preambles | `python/prach_reference.py::cyclically_shift` / `generate_preambles`; `cpp/prach_reference.hpp::cyclically_shift` / `generate_preambles` provide a simpler ZC cyclic-shift mapping, not Eq. 13's full KPS procedure | `test_cyclic_shift_uses_documented_direction`; `test_preamble_ids_fill_shifts_then_advance_to_next_root` | Related primitive is implemented; KPS allocation is not |
-| pp. 4–5, Section IV, Fig. 4, Eqs. 19–30 | Two-stage inner/outer correlation, Doppler compensation, candidate refinement, and detection | No receiver/detector symbols in `python/` or `cpp/` | None | Out of scope; requires separate system and signal model |
+| pp. 4–5, Section IV, Fig. 4, Eqs. 19–30 | Two-stage inner/outer correlation, Doppler compensation, candidate refinement, and detection | No KPS detector in either language; `python/receiver/baseline.py` is an unrelated ordinary-ZC correlator | None for KPS | Out of scope; requires separate system and signal model |
 | pp. 5–6, Section V, Figs. 5–6 | Complexity and missed-detection simulation results under the paper's stated setup | Not run or reproduced by this repository | None | Reported paper evidence only; not a project benchmark |
 | p. 6, Section VI | Authors' conclusion on KPS and the proposed detector | No direct executable mapping | None | Paper conclusion, not an implemented or standardized feature |
 
 ## Distinguishing proposals from implementation
+
+### Supporting receiver paper to prototype
+
+The supporting PDF was also checked with `pdftotext -layout`. Section III
+(pp. 3–4, Figs. 3–5) describes parallel independent ResNet-like networks for
+RAPID and TA classification, using frequency-domain samples extracted from
+the OFDM resource grid. Sections III–IV compare simulated TDL-channel and
+OTA captures; Section V (p. 6) leaves additional base sequences, channel
+scenarios, and multi-user collision detection to future work.
+
+| Supporting-paper idea | Actual project code | Status / validation |
+| --- | --- | --- |
+| RAPID and TA receiver tasks, Section III | `python/receiver/dataset.py` labels; `baseline.py` ID and integer sample-delay estimates | Toy ZC-sample model, not resource-grid input or physical TA; `tests/test_receiver.py` |
+| Correlation comparison, Section IV | Exhaustive template/delay correlation in `baseline.py`; accuracy and conditional delay metrics in `evaluate.py` | Deterministic research reference, not a reproduction of the paper's correlator/results |
+| Parallel neural networks, Section III, Fig. 3 | `model.py::ReceiverModel` and `iq_features` | Interface/features only; no ResNet, training, inference, or performance claim |
+| Multi-user collision detection, Section V future work | Synthetic superposition labels and residual-correlation heuristic | Project research choice, not a completed paper result; tests include an unidentifiable same-ID/same-delay case |
+
+The prototype's small bank, linear padding/delay, AWGN, normalized Doppler,
+collision thresholds, and metrics are **project choices**, not the paper's
+experimental configuration. No simulated or OTA gains reported by the paper
+are claimed for this code. See the [receiver architecture](../architecture.md#receiver-research-prototype).
 
 The current **implemented baseline** is deterministic odd-length ZC root
 generation, cyclic shifting, and sequential ID allocation across roots. It is
@@ -117,6 +139,7 @@ the primary source**, not part of this code.
 An older project sketch mentioned UE-specific neural generation and
 diffusion/transformer models. Those are separate **unvalidated project
 ideas**; they are neither proposed in the primary KPS paper nor implemented
-here. There are no trained models, training datasets, UE/gNB signaling
-protocol, transmitter/receiver, or standards-compliant 6G implementation in
-this repository.
+here. There are no trained models, fixed training datasets, UE/gNB signaling
+protocol, complete PHY transmitter/receiver, or standards-compliant 6G
+implementation. The new synthetic dataset and deterministic receiver research
+path do not change the implemented generator baseline.

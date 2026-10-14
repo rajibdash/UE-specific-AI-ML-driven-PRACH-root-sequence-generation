@@ -20,7 +20,8 @@ def main():
     parser.add_argument("--max-doppler", type=float, default=0.0)
     parser.add_argument("--collision-probability", type=float, default=0.0)
     args = parser.parse_args()
-    preambles = generate_preambles(length=31, n_cs=8, count=6)
+    bank_parameters = dict(length=31, root_start=1, n_cs=8, count=6)
+    preambles = generate_preambles(**bank_parameters)
     dataset = generate_dataset(preambles, **vars(args))
     receiver = CorrelationReceiver(preambles, max_delay=args.max_delay)
     start = time.perf_counter()
@@ -29,6 +30,11 @@ def main():
     print("RESEARCH ONLY: synthetic samples; no trained ML or standards compliance")
     print(json.dumps({
         "parameters": vars(args),
+        "bank": bank_parameters,
+        "receiver": {
+            "detection_threshold": receiver.detection_threshold,
+            "collision_ratio": receiver.collision_ratio,
+        },
         "metrics": asdict(evaluate(dataset, predictions)),
         "seconds_per_sample": elapsed / len(dataset),
     }, indent=2))
